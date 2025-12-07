@@ -27,9 +27,9 @@ serve(async (req) => {
   }
 
   try {
-    const GROQ_API_KEY = Deno.env.get("forgeapikey");
+    const GROQ_API_KEY = Deno.env.get("zenithapiapikey");
     if (!GROQ_API_KEY) {
-      console.error("forgeapikey is not configured");
+      console.error("zenithapiapikey is not configured");
       throw new Error("API key not configured");
     }
 
