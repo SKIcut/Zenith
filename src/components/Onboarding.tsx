@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { UserProfile, RoleModel } from '@/types/mentor';
-import { ArrowRight, ArrowLeft, Sparkles, Target, Mountain, Users, Heart } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Flame, Target, Mountain, Users, Heart } from 'lucide-react';
 
 interface OnboardingProps {
   onComplete: (profile: Partial<UserProfile>) => void;
@@ -74,7 +74,7 @@ export const Onboarding = ({ onComplete }: OnboardingProps) => {
           {step === 'welcome' && (
             <div className="text-center space-y-6">
               <div className="bg-gradient-primary w-20 h-20 rounded-2xl flex items-center justify-center mx-auto">
-                <Sparkles className="w-10 h-10 text-primary-foreground" />
+                <Flame className="w-10 h-10 text-primary-foreground" />
               </div>
               <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 Welcome to Forge
@@ -276,7 +276,7 @@ export const Onboarding = ({ onComplete }: OnboardingProps) => {
                   <ArrowLeft className="mr-2 w-4 h-4" /> Back
                 </Button>
                 <Button onClick={handleComplete} className="bg-gradient-primary text-primary-foreground">
-                  Start My Journey <Sparkles className="ml-2 w-4 h-4" />
+                  Start My Journey <Flame className="ml-2 w-4 h-4" />
                 </Button>
               </div>
             </div>

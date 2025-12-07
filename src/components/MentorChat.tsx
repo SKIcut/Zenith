@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Message, UserProfile } from '@/types/mentor';
 import { streamMentorResponse } from '@/lib/mentorApi';
-import { Send, Sparkles, User, Settings, Trash2 } from 'lucide-react';
+import { Send, Flame, User, Settings, Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 interface MentorChatProps {
@@ -114,7 +114,7 @@ So, what's on your mind today? What are you working through?`;
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-gradient-primary p-2 rounded-lg">
-              <Sparkles className="w-6 h-6 text-primary-foreground" />
+              <Flame className="w-6 h-6 text-primary-foreground" />
             </div>
             <div>
               <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
@@ -149,7 +149,7 @@ So, what's on your mind today? What are you working through?`;
         <div className="max-w-3xl mx-auto space-y-6 pb-32">
           {messages.length === 0 && (
             <div className="text-center py-12 animate-fade-in">
-              <Sparkles className="w-12 h-12 text-primary mx-auto mb-4" />
+              <Flame className="w-12 h-12 text-primary mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-foreground mb-2">Ready when you are</h2>
               <p className="text-muted-foreground mb-8">What's on your mind today?</p>
               <div className="grid sm:grid-cols-2 gap-3 max-w-xl mx-auto">
@@ -173,7 +173,7 @@ So, what's on your mind today? What are you working through?`;
             >
               {message.role === 'assistant' && (
                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-primary-foreground" />
+                  <Flame className="w-4 h-4 text-primary-foreground" />
                 </div>
               )}
               <div
@@ -199,7 +199,7 @@ So, what's on your mind today? What are you working through?`;
           {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
             <div className="flex gap-3 animate-fade-in">
               <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-primary-foreground" />
+                <Flame className="w-4 h-4 text-primary-foreground" />
               </div>
               <div className="bg-glass backdrop-blur-glass border border-glass rounded-2xl p-4">
                 <div className="flex gap-1">
