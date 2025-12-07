@@ -118,7 +118,7 @@ So, what's on your mind today? What are you working through?`;
             </div>
             <div>
               <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                Forge
+                Zenith
               </h1>
               <p className="text-xs text-muted-foreground">Your private space</p>
             </div>
