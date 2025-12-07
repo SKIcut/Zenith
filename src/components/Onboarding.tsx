@@ -77,7 +77,7 @@ export const Onboarding = ({ onComplete }: OnboardingProps) => {
                 <Sparkles className="w-10 h-10 text-primary-foreground" />
               </div>
               <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                Welcome to AI Mentor
+                Welcome to Forge
               </h1>
               <p className="text-xl text-muted-foreground max-w-md mx-auto">
                 I'm your personal guide to growth and success. I know the paths of every great achiever in history, and I'm here to help you forge your own.
