@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Message, UserProfile } from '@/types/mentor';
-import { streamOllamaResponse } from '@/lib/ollama';
+import { streamMentorResponse } from '@/lib/mentorApi';
 import { Send, Sparkles, User, Settings, Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
@@ -58,7 +58,7 @@ So, what's on your mind today? What are you working through?`;
 
     let accumulatedContent = '';
 
-    await streamOllamaResponse(
+    await streamMentorResponse(
       newMessages,
       profile,
       (chunk) => {
