@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { UserProfile, RoleModel } from '@/types/mentor';
-import { ArrowRight, ArrowLeft, Flame, Target, Mountain, Users, Heart } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Target, Mountain, Users, Heart } from 'lucide-react';
+import { ZenithLogo } from '@/components/ZenithLogo';
 
 interface OnboardingProps {
   onComplete: (profile: Partial<UserProfile>) => void;
@@ -62,9 +63,8 @@ export const Onboarding = ({ onComplete }: OnboardingProps) => {
           {steps.map((s, i) => (
             <div
               key={s}
-              className={`h-2 w-12 rounded-full transition-all ${
-                i <= currentIndex ? 'bg-primary' : 'bg-muted'
-              }`}
+              className={`h-2 w-12 rounded-full transition-all ${i <= currentIndex ? 'bg-primary' : 'bg-muted'
+                }`}
             />
           ))}
         </div>
@@ -73,8 +73,8 @@ export const Onboarding = ({ onComplete }: OnboardingProps) => {
           {/* Welcome */}
           {step === 'welcome' && (
             <div className="text-center space-y-6">
-              <div className="bg-gradient-primary w-20 h-20 rounded-2xl flex items-center justify-center mx-auto">
-                <Flame className="w-10 h-10 text-primary-foreground" />
+              <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto">
+                <ZenithLogo variant="icon" size="xl" className="w-20 h-20" />
               </div>
               <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 Welcome to Zenith
@@ -260,11 +260,10 @@ export const Onboarding = ({ onComplete }: OnboardingProps) => {
                   <button
                     key={option.value}
                     onClick={() => setStyle(option.value as typeof style)}
-                    className={`p-4 rounded-xl border text-left transition-all ${
-                      style === option.value
+                    className={`p-4 rounded-xl border text-left transition-all ${style === option.value
                         ? 'border-primary bg-primary/10'
                         : 'border-glass bg-glass hover:border-primary/50'
-                    }`}
+                      }`}
                   >
                     <div className="font-semibold text-foreground">{option.label}</div>
                     <div className="text-sm text-muted-foreground">{option.desc}</div>
@@ -276,7 +275,7 @@ export const Onboarding = ({ onComplete }: OnboardingProps) => {
                   <ArrowLeft className="mr-2 w-4 h-4" /> Back
                 </Button>
                 <Button onClick={handleComplete} className="bg-gradient-primary text-primary-foreground">
-                  Start My Journey <Flame className="ml-2 w-4 h-4" />
+                  Start My Journey <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               </div>
             </div>

@@ -8,53 +8,53 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Dark cosmic theme */
-    --background: 260 40% 8%;
-    --foreground: 0 0% 100%;
+    /* Quiet Luxury - Dark Charcoal & Warm Cream */
+    --background: 0 0% 10%;
+    --foreground: 30 20% 85%;
 
-    --card: 260 30% 12%;
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 13%;
+    --card-foreground: 30 20% 90%;
 
-    --popover: 260 30% 12%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 13%;
+    --popover-foreground: 30 20% 90%;
 
-    /* Purple gradient primary */
-    --primary: 270 60% 60%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 270 70% 70%;
+    /* Rose Gold Primary */
+    --primary: 0 33% 74%;
+    --primary-foreground: 217 33% 11%;
+    --primary-glow: 0 33% 84%;
 
-    /* Cyan accent */
-    --secondary: 190 80% 55%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-glow: 190 90% 65%;
+    /* Rose Gold Accent (lighter variant) */
+    --secondary: 352 48% 81%;
+    --secondary-foreground: 217 33% 11%;
+    --secondary-glow: 352 60% 88%;
 
-    --muted: 260 20% 20%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 0 0% 16%;
+    --muted-foreground: 30 10% 55%;
 
-    --accent: 270 60% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 0 33% 74%;
+    --accent-foreground: 217 33% 11%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 100%;
-    --input: 260 30% 20%;
-    --ring: 270 60% 60%;
+    --border: 0 15% 80%;
+    --input: 0 0% 15%;
+    --ring: 0 33% 74%;
 
     --radius: 0.75rem;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(270 60% 60%), hsl(190 80% 55%));
-    --gradient-background: linear-gradient(180deg, hsl(260 40% 8%), hsl(240 50% 5%));
-    --gradient-glow: radial-gradient(circle at center, hsl(270 60% 60% / 0.3), transparent 70%);
+    --gradient-primary: linear-gradient(135deg, hsl(0 33% 74%), hsl(352 48% 81%));
+    --gradient-background: linear-gradient(180deg, hsl(0 0% 10%), hsl(0 0% 8%));
+    --gradient-glow: radial-gradient(circle at center, hsl(0 33% 74% / 0.3), transparent 70%);
 
     /* Glass effect */
     --glass-bg: hsl(0 0% 100% / 0.05);
-    --glass-border: hsl(0 0% 100% / 0.1);
+    --glass-border: hsl(0 33% 74% / 0.15);
     --glass-blur: blur(20px);
 
     /* Shadows */
-    --shadow-glow: 0 0 40px hsl(270 60% 60% / 0.4);
+    --shadow-glow: 0 0 40px hsl(0 33% 74% / 0.4);
     --shadow-card: 0 10px 30px hsl(0 0% 0% / 0.5);
 
     /* Animations */
@@ -69,5 +69,8 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
   }
 }
