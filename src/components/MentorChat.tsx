@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Message, UserProfile } from '@/types/mentor';
 import { streamMentorResponse } from '@/lib/mentorApi';
-import { Send, User, Settings, Trash2 } from 'lucide-react';
+import { Send, User, Settings, Trash2, ListTodo, LogOut } from 'lucide-react';
 import { ZenithLogo } from '@/components/ZenithLogo';
 import { toast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 interface MentorChatProps {
   profile: UserProfile;
@@ -14,12 +16,19 @@ interface MentorChatProps {
 }
 
 export const MentorChat = ({ profile, onOpenSettings, onClearChat }: MentorChatProps) => {
+  const navigate = useNavigate();
+  const { signOut, isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/auth');
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -122,6 +131,17 @@ So, what's on your mind today? What are you working through?`;
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {isAuthenticated && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/tasks')}
+                className="text-muted-foreground hover:text-foreground gap-2"
+              >
+                <ListTodo className="w-4 h-4" />
+                Tasks
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="icon"
@@ -138,6 +158,16 @@ So, what's on your mind today? What are you working through?`;
             >
               <Settings className="w-5 h-5" />
             </Button>
+            {isAuthenticated && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleSignOut}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            )}
           </div>
         </div>
       </header>
