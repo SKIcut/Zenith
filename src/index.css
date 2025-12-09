@@ -74,3 +74,30 @@ All colors MUST be HSL.
     line-height: 1.6;
   }
 }
+
+/* Typing Animation */
+@keyframes typing-cursor {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in-text {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.typing-cursor {
+  animation: typing-cursor 1s infinite;
+}
+
+.typing-text {
+  animation: fade-in-text 0.3s ease-in-out;
+}

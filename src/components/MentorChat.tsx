@@ -210,9 +210,9 @@ So, what's on your mind today? What are you working through?`;
                   : 'text-foreground'
                   }`}
               >
-                <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                <p className="whitespace-pre-wrap leading-relaxed typing-text">{message.content}</p>
                 {message.role === 'assistant' && isStreaming && index === messages.length - 1 && (
-                  <span className="inline-block w-2 h-4 bg-primary animate-pulse ml-1" />
+                  <span className="inline-block w-2 h-4 bg-primary typing-cursor ml-1" />
                 )}
               </div>
               {message.role === 'user' && (
