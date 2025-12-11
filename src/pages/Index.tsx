@@ -8,7 +8,8 @@ import { SettingsDialog } from '@/components/SettingsDialog';
 import { UserProfile } from '@/types/mentor';
 import { Toaster } from '@/components/ui/toaster';
 import { Button } from '@/components/ui/button';
-import { Flame, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
+import { ZenithLogo } from '@/components/ZenithLogo';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -34,10 +35,7 @@ const Index = () => {
     return (
       <div className="min-h-screen bg-gradient-background flex flex-col items-center justify-center p-4">
         <div className="text-center max-w-md">
-          <div className="p-4 bg-primary/10 rounded-full inline-block mb-6">
-            <Flame className="h-12 w-12 text-primary" />
-          </div>
-          <h1 className="text-3xl font-bold text-foreground mb-3">Welcome to Forge</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-3">Welcome to Zenith</h1>
           <p className="text-muted-foreground mb-8">
             Your AI mentor for personal growth and achievement. Sign in to access your private mentorship space.
           </p>

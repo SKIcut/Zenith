@@ -6,7 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Flame, Loader2 } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Loader2 } from 'lucide-react';
+
 import { useToast } from '@/hooks/use-toast';
 import { z } from 'zod';
 
@@ -91,7 +93,7 @@ export default function Auth() {
       }
     } else {
       toast({
-        title: 'Welcome to Forge!',
+        title: 'Welcome to Zenith!',
         description: 'Your account has been created successfully.'
       });
     }
@@ -109,12 +111,7 @@ export default function Auth() {
     <div className="min-h-screen bg-gradient-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-card/80 backdrop-blur-lg border-glass-border">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="p-3 bg-primary/10 rounded-full">
-              <Flame className="h-8 w-8 text-primary" />
-            </div>
-          </div>
-          <CardTitle className="text-2xl font-bold text-foreground">Forge</CardTitle>
+            <CardTitle className="text-2xl font-bold text-foreground">Zenith</CardTitle>
           <CardDescription className="text-muted-foreground">
             Your AI mentor for growth and achievement
           </CardDescription>
@@ -151,6 +148,15 @@ export default function Auth() {
                     className="bg-input border-border"
                   />
                   {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox id="remember-me" checked={true} disabled={true} />
+                  <label
+                    htmlFor="remember-me"
+                    className="text-sm font-medium leading-none text-muted-foreground"
+                  >
+                    Remember me
+                  </label>
                 </div>
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
                   {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}

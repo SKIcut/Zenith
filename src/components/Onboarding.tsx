@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { UserProfile, RoleModel } from '@/types/mentor';
 import { ArrowRight, ArrowLeft, Target, Mountain, Users, Heart } from 'lucide-react';
-import { ZenithLogo } from '@/components/ZenithLogo';
+
 
 interface OnboardingProps {
   onComplete: (profile: Partial<UserProfile>) => void;
@@ -73,9 +73,6 @@ export const Onboarding = ({ onComplete }: OnboardingProps) => {
           {/* Welcome */}
           {step === 'welcome' && (
             <div className="text-center space-y-6">
-              <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto">
-                <ZenithLogo variant="icon" size="xl" className="w-20 h-20" />
-              </div>
               <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 Welcome to Zenith
               </h1>

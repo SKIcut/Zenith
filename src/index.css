@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import a display serif font used for motivational quotes */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
@@ -74,6 +77,12 @@ All colors MUST be HSL.
     line-height: 1.6;
   }
 }
+
+  /* Serif style for motivations */
+  .motivation-serif {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+  }
 
 /* Typing Animation */
 @keyframes typing-cursor {

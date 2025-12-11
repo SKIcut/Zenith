@@ -4,7 +4,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTasks } from '@/hooks/useTasks';
 import { TaskList } from '@/components/tasks/TaskList';
 import { Button } from '@/components/ui/button';
-import { Flame, LogOut, MessageCircle, Loader2 } from 'lucide-react';
+import { LogOut, MessageCircle, Loader2 } from 'lucide-react';
+
 
 export default function Tasks() {
   const navigate = useNavigate();
@@ -39,12 +40,7 @@ export default function Tasks() {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-lg border-b border-border/50">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Flame className="h-5 w-5 text-primary" />
-            </div>
-            <span className="font-semibold text-foreground">Forge</span>
-          </div>
+          <span className="font-semibold text-foreground">Zenith</span>
 
           <div className="flex items-center gap-2">
             <Button

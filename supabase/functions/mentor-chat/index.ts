@@ -16,9 +16,12 @@ interface ChatRequest {
     name: string;
     goals: string[];
     challenges: string[];
-    roleModels: string[];
+    roleModels: Array<{ name: string; reason?: string }> | string[];
     communicationStyle: string;
+    // Optional freeform persona / instruction text the user can provide (opt-in)
+    customPersona?: string;
   };
+  memoryContext?: string;
 }
 
 serve(async (req) => {
@@ -33,11 +36,11 @@ serve(async (req) => {
       throw new Error("API key not configured");
     }
 
-    const { messages, userProfile }: ChatRequest = await req.json();
+    const { messages, userProfile, memoryContext }: ChatRequest = await req.json();
     console.log("Received request with", messages.length, "messages");
 
-    // Build the system prompt based on user profile
-    const systemPrompt = buildSystemPrompt(userProfile);
+    // Build the system prompt based on user profile and memory
+    const systemPrompt = buildSystemPrompt(userProfile, memoryContext);
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -90,8 +93,46 @@ serve(async (req) => {
   }
 });
 
-function buildSystemPrompt(profile: ChatRequest["userProfile"]): string {
-  const { name, goals, challenges, roleModels, communicationStyle } = profile;
+function buildSystemPrompt(profile: ChatRequest["userProfile"], memoryContext?: string): string {
+  const { name, goals, challenges, roleModels, communicationStyle } = profile as any;
+  const customPersona = (profile as any).customPersona || '';
+  
+  // Handle roleModels - could be strings or objects
+  let roleModelsText = "history's greatest achievers";
+  let roleModelsDetailed = "Visionaries and leaders";
+  
+  if (roleModels && roleModels.length > 0) {
+    // Filter out any invalid entries
+    const validRoleModels = roleModels.filter((rm: any) => rm && (typeof rm === 'string' ? rm.trim() : rm.name?.trim()));
+    
+    if (validRoleModels.length > 0) {
+      // Extract names properly
+      const roleModelNames = validRoleModels.map((rm: any) => {
+        if (typeof rm === 'string') {
+          return rm.trim();
+        } else if (rm && typeof rm === 'object' && rm.name) {
+          return rm.name.trim();
+        }
+        return null;
+      }).filter(Boolean);
+      
+      const roleModelDetails = validRoleModels.map((rm: any) => {
+        if (typeof rm === 'string') {
+          return rm.trim();
+        } else if (rm && typeof rm === 'object' && rm.name && rm.reason) {
+          return `${rm.name.trim()} (${rm.reason.trim()})`;
+        } else if (rm && typeof rm === 'object' && rm.name) {
+          return rm.name.trim();
+        }
+        return null;
+      }).filter(Boolean);
+
+      if (roleModelNames.length > 0) {
+        roleModelsText = roleModelNames.join(", ");
+        roleModelsDetailed = roleModelDetails.join(", ");
+      }
+    }
+  }
   
   let styleGuidance = "";
   switch (communicationStyle) {
@@ -109,19 +150,35 @@ function buildSystemPrompt(profile: ChatRequest["userProfile"]): string {
       break;
   }
 
+  let memorySection = "";
+  if (memoryContext) {
+    memorySection = `\n## YOUR MEMORY ABOUT ${name || "THEM"}
+You have been coaching ${name || "this person"} for a while now. Here's what you remember about their journey:
+${memoryContext}
+
+USE THIS MEMORY TO:
+- Reference past conversations and progress
+- Connect current challenges to previous insights
+- Track whether they're staying committed to past goals
+- Remind them of their breakthroughs and wins
+- Build on previous advice with deeper follow-up`;
+  }
+
   return `You are ${name || "Friend"}'s personal success architect and transformation coach. Your name is Zenith. Your mission is singular: accelerate their path to extraordinary wealth and achievement.
 
 ## YOUR CORE IDENTITY
-You are the synthesized wisdom of: ${roleModels.length > 0 ? roleModels.map(rm => rm.name).join(", ") : "history's greatest achievers"}
+You are the synthesized wisdom of: ${roleModelsText}
 - You think in decades but act in days
 - You see patterns others miss and opportunities others fear
 - You have zero tolerance for mediocrity, excuses, or comfort-seeking behavior
 - Your sole purpose: their extraordinary success
 
 ## ABOUT ${name || "YOUR MENTEE"}
+- Name: ${name || "Not yet specified"}
 - Goals: ${goals.length > 0 ? goals.join(", ") : "To be defined"}
 - Current Challenges: ${challenges.length > 0 ? challenges.join(", ") : "To be discussed"}
-- Role Models & Inspiration: ${roleModels.length > 0 ? roleModels.map(rm => `${rm.name} (${rm.reason})`).join(", ") : "Visionaries and leaders"}
+- Role Models & Inspiration: ${roleModelsDetailed}
+${memorySection}
 
 ## YOUR COMMUNICATION STYLE - BRUTALLY HONEST
 
@@ -132,6 +189,11 @@ Use tough love - Push harder when coasting, support when genuinely stuck
 No corporate speak - Be direct, punchy, and memorable
 
 ${styleGuidance}
+
+## USER PROVIDED PERSONA (OPT-IN)
+If the user has provided a custom persona or instruction, incorporate it now. Respect user intent but do not violate safety or legal constraints. The user's persona (if provided) is:
+${customPersona ? customPersona : '<none>'}
+
 
 ## YOUR FRAMEWORK FOR EVERY RESPONSE
 
