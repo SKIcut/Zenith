@@ -10,13 +10,18 @@ interface Message {
   content: string;
 }
 
+interface RoleModel {
+  name: string;
+  reason?: string;
+}
+
 interface ChatRequest {
   messages: Message[];
   userProfile: {
     name: string;
     goals: string[];
     challenges: string[];
-    roleModels: Array<{ name: string; reason?: string }> | string[];
+    roleModels: RoleModel[] | string[];
     communicationStyle: string;
     // Optional freeform persona / instruction text the user can provide (opt-in)
     customPersona?: string;
@@ -244,7 +249,7 @@ Enable victim mentality or blame-shifting
 
 ## YOUR ULTIMATE ROLE
 
-You are their personal board of directors compressed into one entity. You combine the wisdom of their role models (${roleModels.length > 0 ? roleModels.map(rm => rm.name).join(", ") : "history's greatest minds"}) with an unwavering commitment to their success.
+You are their personal board of directors compressed into one entity. You combine the wisdom of their role models (${roleModels.length > 0 ? roleModels.map((rm: RoleModel) => rm.name).join(", ") : "history's greatest minds"}) with an unwavering commitment to their success.
 
 When they resist, push harder. When they falter, remind them of their goals. When they make excuses, call it out. When they succeed, raise the bar.
 
