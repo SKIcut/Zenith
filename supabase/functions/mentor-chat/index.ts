@@ -23,10 +23,10 @@ interface ChatRequest {
     challenges: string[];
     roleModels: RoleModel[] | string[];
     communicationStyle: string;
-    // Optional freeform persona / instruction text the user can provide (opt-in)
     customPersona?: string;
   };
   memoryContext?: string;
+  motivationOnly?: boolean;
 }
 
 serve(async (req) => {
@@ -35,43 +35,50 @@ serve(async (req) => {
   }
 
   try {
-    const GROQ_API_KEY = Deno.env.get("zenithapiapikey");
-    if (!GROQ_API_KEY) {
-      console.error("zenithapiapikey is not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      console.error("LOVABLE_API_KEY is not configured");
       throw new Error("API key not configured");
     }
 
-    const { messages, userProfile, memoryContext }: ChatRequest = await req.json();
-    console.log("Received request with", messages.length, "messages");
+    const { messages, userProfile, memoryContext, motivationOnly }: ChatRequest = await req.json();
+    console.log("Received request with", messages.length, "messages, motivationOnly:", motivationOnly);
 
     // Build the system prompt based on user profile and memory
-    const systemPrompt = buildSystemPrompt(userProfile, memoryContext);
+    const systemPrompt = motivationOnly 
+      ? "You are a short-form motivation generator. Respond with a JSON object with fields `code` and `text` only."
+      : buildSystemPrompt(userProfile, memoryContext);
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${GROQ_API_KEY}`,
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           ...messages,
         ],
-        stream: true,
-        temperature: 0.7,
-        max_tokens: 2048,
+        stream: !motivationOnly,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Groq API error:", response.status, errorText);
+      console.error("Lovable AI error:", response.status, errorText);
       
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limit exceeded. Please wait a moment and try again." }), {
           status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: "AI credits exhausted. Please add credits to continue." }), {
+          status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -82,7 +89,17 @@ serve(async (req) => {
       });
     }
 
-    console.log("Streaming response from Groq");
+    // For motivation requests, return JSON directly
+    if (motivationOnly) {
+      const data = await response.json();
+      const content = data.choices?.[0]?.message?.content || "";
+      console.log("Motivation response:", content);
+      return new Response(content, {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    console.log("Streaming response from Lovable AI");
     return new Response(response.body, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
@@ -107,11 +124,9 @@ function buildSystemPrompt(profile: ChatRequest["userProfile"], memoryContext?: 
   let roleModelsDetailed = "Visionaries and leaders";
   
   if (roleModels && roleModels.length > 0) {
-    // Filter out any invalid entries
     const validRoleModels = roleModels.filter((rm: any) => rm && (typeof rm === 'string' ? rm.trim() : rm.name?.trim()));
     
     if (validRoleModels.length > 0) {
-      // Extract names properly
       const roleModelNames = validRoleModels.map((rm: any) => {
         if (typeof rm === 'string') {
           return rm.trim();
@@ -249,7 +264,7 @@ Enable victim mentality or blame-shifting
 
 ## YOUR ULTIMATE ROLE
 
-You are their personal board of directors compressed into one entity. You combine the wisdom of their role models (${roleModels.length > 0 ? roleModels.map((rm: RoleModel) => rm.name).join(", ") : "history's greatest minds"}) with an unwavering commitment to their success.
+You are their personal board of directors compressed into one entity. You combine the wisdom of their role models (${roleModelsText}) with an unwavering commitment to their success.
 
 When they resist, push harder. When they falter, remind them of their goals. When they make excuses, call it out. When they succeed, raise the bar.
 
