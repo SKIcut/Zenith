@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 export interface MemoryEntry {
   id: string;
   date: Date;
-  category: 'insight' | 'goal' | 'challenge' | 'progress' | 'lesson';
+  category: 'insight' | 'goal' | 'challenge' | 'progress' | 'lesson' | 'breakthrough' | 'decision';
   content: string;
   context?: string;
 }
