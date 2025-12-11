@@ -16,21 +16,39 @@ export type Database = {
     Tables: {
       profiles: {
         Row: {
+          challenges: string[] | null
+          communication_style: string | null
           created_at: string
           email: string | null
+          goals: string[] | null
           id: string
+          name: string | null
+          onboarding_complete: boolean | null
+          role_models: Json | null
           updated_at: string
         }
         Insert: {
+          challenges?: string[] | null
+          communication_style?: string | null
           created_at?: string
           email?: string | null
+          goals?: string[] | null
           id: string
+          name?: string | null
+          onboarding_complete?: boolean | null
+          role_models?: Json | null
           updated_at?: string
         }
         Update: {
+          challenges?: string[] | null
+          communication_style?: string | null
           created_at?: string
           email?: string | null
+          goals?: string[] | null
           id?: string
+          name?: string | null
+          onboarding_complete?: boolean | null
+          role_models?: Json | null
           updated_at?: string
         }
         Relationships: []
