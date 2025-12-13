@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 export interface MemoryEntry {
   id: string;
   date: Date;
-  category: 'insight' | 'goal' | 'challenge' | 'progress' | 'lesson' | 'decision' | 'breakthrough';
+  category: 'insight' | 'goal' | 'challenge' | 'progress' | 'lesson';
   content: string;
   context?: string | null;
   confidence?: number | null;
