@@ -20,7 +20,7 @@ export const MemoryManager = ({ open, onOpenChange, userId }: MemoryManagerProps
   const [editContent, setEditContent] = useState('');
   const [showAddNew, setShowAddNew] = useState(false);
   const [newMemoryContent, setNewMemoryContent] = useState('');
-  const [newMemoryCategory, setNewMemoryCategory] = useState<'goal' | 'challenge' | 'insight' | 'lesson' | 'progress'>('insight');
+  const [newMemoryCategory, setNewMemoryCategory] = useState<'goal' | 'challenge' | 'insight' | 'lesson' | 'progress' | 'breakthrough'>('insight');
 
   const handleExport = () => {
     const data = exportMemories();
@@ -64,7 +64,7 @@ export const MemoryManager = ({ open, onOpenChange, userId }: MemoryManagerProps
     }
   };
 
-  const categories = ['insight', 'goal', 'challenge', 'progress', 'lesson'] as const;
+  const categories = ['insight', 'goal', 'challenge', 'progress', 'lesson', 'breakthrough'] as const;
   
   const categoryCounts = categories.reduce((acc, cat) => {
     acc[cat] = memory.memories.filter(m => m.category === cat).length;

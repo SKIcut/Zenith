@@ -9,6 +9,8 @@ export interface DetectedTask {
  * Heuristic task extractor: finds TODO-style lines, imperative sentences,
  * and explicit "remind me to" / "I need to" statements.
  */
+import { supabase } from '@/integrations/supabase/client';
+
 export function extractTasksFromText(text: string): DetectedTask[] {
   if (!text) return [];
   const tasks: DetectedTask[] = [];
@@ -75,4 +77,32 @@ export function extractTasksFromText(text: string): DetectedTask[] {
   }
 
   return tasks;
+}
+
+// Persist detected tasks to Supabase for the authenticated user
+export async function saveDetectedTasks(text: string, sourceText?: string) {
+  const tasks = extractTasksFromText(text);
+  if (!tasks.length) return [];
+
+  try {
+    const { data } = await supabase.auth.getUser();
+    const uid = data.user?.id;
+    if (!uid) throw new Error('Not authenticated');
+
+    const inserts = tasks.map(t => ({
+      user_id: uid,
+      title: t.title,
+      description: t.description || null,
+      source_text: sourceText || text,
+      confidence: null,
+    }));
+
+    const { error } = await supabase.from('detected_tasks').insert(inserts);
+    if (error) throw error;
+    return inserts;
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn('saveDetectedTasks failed', err);
+    return [];
+  }
 }

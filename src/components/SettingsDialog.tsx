@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { UserProfile, RoleModel } from '@/types/mentor';
-import { X, Plus, Trash2 } from 'lucide-react';
+import { X, Plus, Trash2, ArrowLeft } from 'lucide-react';
 
 interface SettingsDialogProps {
   open: boolean;
@@ -43,7 +43,12 @@ export const SettingsDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-card border-glass max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-foreground">Settings</DialogTitle>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)}>
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <DialogTitle className="text-foreground">Settings</DialogTitle>
+          </div>
         </DialogHeader>
 
         <div className="space-y-6 py-4">

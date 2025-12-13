@@ -22,7 +22,8 @@ const Index = () => {
   };
 
   const handleClearChat = () => {
-    window.location.reload();
+    // Clear chat is now handled by MentorChat component using database
+    // This function can be empty or trigger a refresh
   };
 
   const handleReset = () => {

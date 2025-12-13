@@ -10,12 +10,14 @@ import { fetchMotivation } from '@/lib/mentorApi';
 import { ZenithLogo } from '@/components/ZenithLogo';
 import { MemoryManager } from '@/components/MemoryManager';
 import { FunctionPanel } from '@/components/FunctionPanel';
+// FunctionsDock removed from inline chat view per UX change
 import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemory } from '@/hooks/useMemory';
 import { MemoryExtractor, type ExtractedMemory } from '@/lib/memoryExtractor';
 // taskSync detection disabled in chat UI (no suggestions)
 import { useTasks } from '@/hooks/useTasks';
+import { trackEvent } from '@/lib/analytics';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface MentorChatProps {
@@ -298,7 +300,8 @@ export const MentorChat = ({ profile, onOpenSettings, onClearChat }: MentorChatP
     }
 
     // Otherwise proceed with regular chat flow
-    const userMessage: Message = { role: 'user', content: input.trim(), timestamp: new Date() };
+    const messageText = input.trim();
+    const userMessage: Message = { role: 'user', content: messageText, timestamp: new Date() };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput('');
@@ -309,7 +312,14 @@ export const MentorChat = ({ profile, onOpenSettings, onClearChat }: MentorChatP
     setMessages(prev => [...prev, { role: 'assistant', content: '', timestamp: new Date() }] );
 
     // Add user message to memory
-    addToConversationHistory(`User: ${input.trim()}`);
+    addToConversationHistory(`User: ${messageText}`);
+
+    // analytics: track chat send
+    try {
+      trackEvent('chat_send', { text: messageText, onboardingComplete: profile.onboardingComplete });
+    } catch (e) {
+      // ignore analytics errors
+    }
 
     let accumulatedContent = '';
 
@@ -356,6 +366,7 @@ export const MentorChat = ({ profile, onOpenSettings, onClearChat }: MentorChatP
         if (extractedMemories.length > 0) {
           extractedMemories.forEach(mem => {
             addMemory(mem.type, mem.content, mem.context);
+            try { trackEvent('memory_saved', { type: mem.type, snippet: mem.content.substring(0, 120) }); } catch (e) { /* no-op */ }
           });
           
           // Show confirmation toast
@@ -480,6 +491,7 @@ export const MentorChat = ({ profile, onOpenSettings, onClearChat }: MentorChatP
             Zenith
           </h1>
           <div className="flex items-center">
+            {/* Habits shortcut removed */}
             {!showFunctionPanel && (
               <button
                 aria-label="Open menu"
@@ -503,6 +515,8 @@ export const MentorChat = ({ profile, onOpenSettings, onClearChat }: MentorChatP
         onNewChat={handleNewChat}
         onOpenMemory={() => { setShowMemoryManager(true); setShowFunctionPanel(false); }}
         onOpenTasks={() => { navigate('/tasks'); setShowFunctionPanel(false); }}
+        onOpenAnalytics={() => { try { trackEvent('view_analytics'); } catch (e) {} navigate('/analytics'); setShowFunctionPanel(false); }}
+        onOpenHabits={() => { navigate('/habits'); setShowFunctionPanel(false); }}
         onOpenSettings={() => { onOpenSettings(); setShowFunctionPanel(false); }}
         onClearChat={() => { onClearChat(); setShowFunctionPanel(false); }}
         onSignOut={() => { handleSignOut(); setShowFunctionPanel(false); }}
@@ -557,6 +571,8 @@ export const MentorChat = ({ profile, onOpenSettings, onClearChat }: MentorChatP
               {/* avatars removed to reduce visual clutter while chatting */}
             </div>
           ))}
+
+          {/* Inline quick tools removed */}
 
           {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
             <div className="flex gap-3 animate-fade-in">
@@ -648,6 +664,7 @@ export const MentorChat = ({ profile, onOpenSettings, onClearChat }: MentorChatP
                 onClick={() => {
                   detectedMemories.forEach(mem => {
                     addMemory(mem.type, mem.content, mem.context);
+                    try { trackEvent('memory_saved', { type: mem.type, snippet: mem.content.substring(0, 120) }); } catch (e) { /* no-op */ }
                   });
                   toast({
                     title: '✅ Memories Saved',

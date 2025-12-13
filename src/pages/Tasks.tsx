@@ -4,12 +4,12 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTasks } from '@/hooks/useTasks';
 import { TaskList } from '@/components/tasks/TaskList';
 import { Button } from '@/components/ui/button';
-import { LogOut, MessageCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Loader2 } from 'lucide-react';
 
 
 export default function Tasks() {
   const navigate = useNavigate();
-  const { user, loading: authLoading, signOut, isAuthenticated } = useAuth();
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   const { tasks, isLoading, createTask, updateTask, deleteTask, toggleComplete } = useTasks();
 
   useEffect(() => {
@@ -18,10 +18,7 @@ export default function Tasks() {
     }
   }, [authLoading, isAuthenticated, navigate]);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/auth');
-  };
+  const handleBack = () => navigate(-1);
 
   if (authLoading) {
     return (
@@ -55,11 +52,11 @@ export default function Tasks() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={handleSignOut}
+              onClick={handleBack}
               className="gap-2 text-muted-foreground"
             >
-              <LogOut className="h-4 w-4" />
-              Sign Out
+              <ArrowLeft className="h-4 w-4" />
+              Back
             </Button>
           </div>
         </div>
