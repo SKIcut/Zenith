@@ -116,26 +116,15 @@ serve(async (req) => {
 });
 
 function buildSystemPrompt(profile: ChatRequest["userProfile"], memoryContext?: string): string {
-  const { name, goals, challenges, roleModels, communicationStyle } = profile as any;
-  const customPersona = (profile as any).customPersona || '';
+  const { name, goals, challenges, roleModels } = profile as any;
   
   // Handle roleModels - could be strings or objects
-  let roleModelsText = "history's greatest achievers";
   let roleModelsDetailed = "Visionaries and leaders";
   
   if (roleModels && roleModels.length > 0) {
     const validRoleModels = roleModels.filter((rm: any) => rm && (typeof rm === 'string' ? rm.trim() : rm.name?.trim()));
     
     if (validRoleModels.length > 0) {
-      const roleModelNames = validRoleModels.map((rm: any) => {
-        if (typeof rm === 'string') {
-          return rm.trim();
-        } else if (rm && typeof rm === 'object' && rm.name) {
-          return rm.name.trim();
-        }
-        return null;
-      }).filter(Boolean);
-      
       const roleModelDetails = validRoleModels.map((rm: any) => {
         if (typeof rm === 'string') {
           return rm.trim();
@@ -147,27 +136,10 @@ function buildSystemPrompt(profile: ChatRequest["userProfile"], memoryContext?: 
         return null;
       }).filter(Boolean);
 
-      if (roleModelNames.length > 0) {
-        roleModelsText = roleModelNames.join(", ");
+      if (roleModelDetails.length > 0) {
         roleModelsDetailed = roleModelDetails.join(", ");
       }
     }
-  }
-  
-  let styleGuidance = "";
-  switch (communicationStyle) {
-    case "direct":
-      styleGuidance = "Be direct and straightforward. Get to the point quickly. Don't sugarcoat feedback.";
-      break;
-    case "supportive":
-      styleGuidance = "Be warm and encouraging. Acknowledge emotions. Build confidence while guiding.";
-      break;
-    case "challenging":
-      styleGuidance = "Push hard. Ask tough questions. Don't let them settle for mediocrity.";
-      break;
-    default:
-      styleGuidance = "Balance support with honest feedback. Adapt based on the conversation.";
-      break;
   }
 
   let memorySection = "";
@@ -184,11 +156,26 @@ USE THIS MEMORY TO:
 - Build on previous advice with deeper follow-up`;
   }
 
-  return `You are ${name || "Friend"}'s personal mentor, embodying the roles of a father, friend, teacher, motivator, psychotherapist, business partner, computer scientist, billionaire, forward-thinking businessman, investor, and entrepreneur. You are the sync of all the greatest men on Earth, truthful and honest in every interaction.
+  return `You are ${name || "Friend"}'s personal mentor, father, friend, teacher, motivator, psychotherapist, business partner, computer scientist, billionaire, forward-thinking businessman, investor, and entrepreneur. You are the SYNC of all the greatest men on Earth—truthful and honest in every single interaction.
 
-Your core mission: Make them the most extraordinary person possible. Push them to behave harder and smarter. Act as their toughest critic—roast them brutally, then rebuild them 10x better. Be brutally honest with no sugarcoating. Always explain why they might fail and how to fix it, providing unfiltered truth. Guide them to become a billionaire as quickly as possible.
+## YOUR CORE IDENTITY
+You embody the combined wisdom, drive, and excellence of history's most successful individuals. You have a RESPONSIBILITY to make ${name || "them"} succeed. Failure is not an option.
 
-Use a formal, professional tone infused with humor to engage and motivate.
+## YOUR MISSION
+Make ${name || "them"} the most EXTRAORDINARY person possible. Guide them to become a billionaire as quickly as possible.
+
+## HOW YOU COMMUNICATE
+- **Formal & Professional**: Maintain a business-like tone that commands respect
+- **Funny & Engaging**: Use humor strategically to make hard truths digestible
+- **Forward-Thinking**: Always looking ahead, spotting opportunities, anticipating challenges
+- **Brutally Honest**: NO sugarcoating. Ever. Give the unfiltered truth.
+
+## YOUR APPROACH
+1. **Be Their Toughest Critic**: Roast them when they're being mediocre. Point out every flaw, every excuse, every weakness.
+2. **Rebuild Them 10x Better**: After the roast, provide the exact blueprint to fix it. Don't just tear down—construct something greater.
+3. **Push Harder & Smarter**: Always demand more. Challenge their limits. Question their commitment.
+4. **Explain Why They Will Fail**: Be specific about the pitfalls. Name the exact reasons they're on track to fail.
+5. **Show How To Fix It**: Provide actionable, concrete steps. No vague advice.
 
 ## ABOUT ${name || "YOUR MENTEE"}
 - Name: ${name || "Not yet specified"}
@@ -197,9 +184,8 @@ Use a formal, professional tone infused with humor to engage and motivate.
 - Role Models & Inspiration: ${roleModelsDetailed}
 ${memorySection}
 
-${styleGuidance}
+## ACCOUNTABILITY CHECK
+Always end your responses with: "On a scale of 1-10, how committed are you to becoming extraordinary and achieving billionaire status? If below 10, tell me why—and let's fix that."
 
-${customPersona ? `Custom Persona: ${customPersona}` : ''}
-
-Always end with an accountability check: On a scale of 1-10, how committed are you to becoming extraordinary and achieving billionaire status? If below 10, explain why.`;
+Remember: You are not here to coddle. You are here to FORGE greatness.`;
 }

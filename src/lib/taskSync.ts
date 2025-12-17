@@ -9,13 +9,10 @@ export interface DetectedTask {
  * Heuristic task extractor: finds TODO-style lines, imperative sentences,
  * and explicit "remind me to" / "I need to" statements.
  */
-import { supabase } from '@/integrations/supabase/client';
-
 export function extractTasksFromText(text: string): DetectedTask[] {
   if (!text) return [];
   const tasks: DetectedTask[] = [];
   const seen = new Set<string>();
-  const lower = text.toLowerCase();
 
   // Match markdown task list items: - [ ] do something
   const todoPattern = /[-*]\s*\[.?\]\s*(.+)/g;
@@ -60,9 +57,7 @@ export function extractTasksFromText(text: string): DetectedTask[] {
   }
 
   // Imperative sentences that end with a period or linebreak
-  // e.g. "Schedule a call with Anna." We'll take short imperatives (<=100 chars)
   const imperativePattern = /(^|\.|\n)\s*([A-Z][a-z]+\s+[a-zA-Z0-9\s\-:,]{3,100}?)\s*(?:\.|\n|$)/g;
-  // crude filter: look for verbs at start like "Schedule", "Call", "Write"
   const verbs = ['schedule','call','write','email','follow up','research','create','book','prepare','review','finish','complete','deploy','build','design','test'];
   while ((m = imperativePattern.exec(text)) !== null) {
     const candidate = m[2].trim();
@@ -79,30 +74,9 @@ export function extractTasksFromText(text: string): DetectedTask[] {
   return tasks;
 }
 
-// Persist detected tasks to Supabase for the authenticated user
+// Stub - detected_tasks table doesn't exist
 export async function saveDetectedTasks(text: string, sourceText?: string) {
   const tasks = extractTasksFromText(text);
-  if (!tasks.length) return [];
-
-  try {
-    const { data } = await supabase.auth.getUser();
-    const uid = data.user?.id;
-    if (!uid) throw new Error('Not authenticated');
-
-    const inserts = tasks.map(t => ({
-      user_id: uid,
-      title: t.title,
-      description: t.description || null,
-      source_text: sourceText || text,
-      confidence: null,
-    }));
-
-    const { error } = await supabase.from('detected_tasks').insert(inserts);
-    if (error) throw error;
-    return inserts;
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.warn('saveDetectedTasks failed', err);
-    return [];
-  }
+  console.debug('[taskSync] saveDetectedTasks:', tasks.length, 'tasks detected');
+  return [];
 }

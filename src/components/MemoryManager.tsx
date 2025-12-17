@@ -22,8 +22,8 @@ export const MemoryManager = ({ open, onOpenChange, userId }: MemoryManagerProps
   const [newMemoryContent, setNewMemoryContent] = useState('');
   const [newMemoryCategory, setNewMemoryCategory] = useState<'goal' | 'challenge' | 'insight' | 'lesson' | 'progress' | 'breakthrough'>('insight');
 
-  const handleExport = () => {
-    const data = exportMemories();
+  const handleExport = async () => {
+    const data = await exportMemories();
     const element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data));
     element.setAttribute('download', `zenith-memories-${new Date().toISOString().split('T')[0]}.json`);
